@@ -28,11 +28,24 @@ import { createShape } from "./shape.js";
 // For example: which notes you can play, how fast things move, the tempo.
 const note = "C4"; // the note played when the pointer goes down
 
-const shape = createShape(); // different shapes
-const shapeYellow = createShape();
+const shapeRed = createShape(); // different shapes
+const shapeYellow = createShape(); // Double check why i have these?
 const shapeGreen = createShape();
 const shapeBlue = createShape();
 const shapePurple = createShape();
+
+const shapes = [shapeRed, shapeYellow, shapeGreen, shapeBlue, shapePurple];
+
+const startShape = 100; // EXPLAIN
+const nextSize = 20;
+const maxShape = 3;
+
+const sizes = []; //EXPLAIN
+for (let i = 0; i <= maxShape; i++) {
+  sizes.push(startShape + i * nextSize);
+}
+
+const shapePositions = [0, 0, 0, 0, 0]; // EXPLAINF
 // ---------- State ----------
 // State variables are the parts of your program that change over time.
 // For example: where the pointer is, how fast it's moving, or whether a drone is on.
@@ -57,8 +70,8 @@ function use() {
 // Runs every time the pointer goes down: a click, a tap or a pen touch.
 function pointerDown(event) {
   Tone.start(); // browsers only allow sound after the player has pressed something
-
-  console.log("Pointer down at", event.clientX, event.clientY);
+  let normX = event.clientX / window.innerWidth; // Maybe keep maybe not
+  console.log("Pointer down at", normX); // Maybe keep maybe not
   synth.triggerAttackRelease(note, "8n"); // play the note for an eighth note
 }
 
@@ -66,56 +79,70 @@ function startSound(event) {
   Tone.start();
 }
 
+function pointerMove(event) {
+  let normX = event.clientX / window.innerWidth;
+  // console.log(normX);
+}
+
 function pointerEnter(event) {
-  if (event.currentTarget === shape.element) {
-    synth.triggerAttackRelease("E4", "8n");
-    shape.setRoundedness(1);
-    shape.setColour(0, 100, 70);
+  if (event.currentTarget === shapeRed.element) {
+    synth.triggerAttackRelease(["E4", "G4", "B4"], "8n");
+    shapeRed.setRoundedness(1);
+    shapeRed.setColour(0, 100, 70);
   } else if (event.currentTarget === shapeYellow.element) {
-    synth.triggerAttackRelease("D4", "8n");
+    synth.triggerAttackRelease(["G4", "B4", "D5"], "8n");
     shapeYellow.setRoundedness(1);
     shapeYellow.setColour(60, 100, 70);
   } else if (event.currentTarget === shapeGreen.element) {
-    synth.triggerAttackRelease("C4", "8n");
+    synth.triggerAttackRelease(["F4", "A4", "C5"], "8n");
     shapeGreen.setRoundedness(1);
     shapeGreen.setColour(120, 100, 70);
   } else if (event.currentTarget === shapeBlue.element) {
-    synth.triggerAttackRelease("C4", "8n");
+    synth.triggerAttackRelease(["A3", "C4", "E4"], "8n");
     shapeBlue.setRoundedness(1);
     shapeBlue.setColour(210, 100, 70);
   } else if (event.currentTarget === shapePurple.element) {
-    synth.triggerAttackRelease("A4", "8n");
+    synth.triggerAttackRelease(["C4", "G4", "B4"], "8n");
     shapePurple.setRoundedness(1);
     shapePurple.setColour(270, 100, 70);
+  }
+  for (let i = 0; i < shapes.length; i++) {
+    // EXPLAIN
+    if (event.currentTarget === shapes[i].element) {
+      shapePositions[i] = shapePositions[i] + 1;
+      if (shapePositions[i] >= sizes.length) shapePositions[i] = 0;
+    }
+    shapes[i].setSize(sizes[shapePositions[i]]); // EXPLAIN
+    console.log("shape", i, "size", sizes[shapePositions[i]]);
   }
 }
 
 // console.log("pointer enters red shape");
 function pointerLeave(event) {
-  if (event.currentTarget === shape.element) {
-    synth.triggerAttackRelease("G4", "8n");
-    shape.setRoundedness(0.4);
-    shape.setColour(0, 80, 50);
+  if (event.currentTarget === shapeRed.element) {
+    // synth.triggerAttackRelease("G4", "8n");
+    shapeRed.setRoundedness(1);
+    shapeRed.setColour(0, 80, 50);
   } else if (event.currentTarget === shapeYellow.element) {
-    synth.triggerAttackRelease("A4", "8n");
-    shapeYellow.setRoundedness(0.4);
+    // synth.triggerAttackRelease("A4", "8n");
+    shapeYellow.setRoundedness(1);
     shapeYellow.setColour(60, 80, 50);
   } else if (event.currentTarget === shapeGreen.element) {
-    synth.triggerAttackRelease("B4", "8n");
-    shapeGreen.setRoundedness(0.4);
+    // synth.triggerAttackRelease("B4", "8n");
+    shapeGreen.setRoundedness(1);
     shapeGreen.setColour(120, 80, 50);
   } else if (event.currentTarget === shapeBlue.element) {
-    synth.triggerAttackRelease("E4", "8n");
-    shapeBlue.setRoundedness(0.4);
+    // synth.triggerAttackRelease("E4", "8n");
+    shapeBlue.setRoundedness(1);
     shapeBlue.setColour(210, 80, 50);
   } else if (event.currentTarget === shapePurple.element) {
-    synth.triggerAttackRelease("F4", "8n");
-    shapePurple.setRoundedness(0.4);
+    // synth.triggerAttackRelease("F4", "8n");
+    shapePurple.setRoundedness(1);
     shapePurple.setColour(270, 80, 50);
   }
 }
-console.log("pointer leaves yellow shape");
-//function pointerMove(event) {
+// console.log("pointer leaves yellow shape");
+// function pointerMove(event) {
 // Tone.start();
 // let normX = event.clientX/window.innerWidth;
 
@@ -131,47 +158,47 @@ function setup() {
 
   // Example: a shape near the middle of the window. Replace it with your own.
 
-  shape.setPosition(0.1, 0.1); // Where the shape is positioned on the screen
-  shape.setSize(100); // How big or small the shape is
-  shape.setRoundedness(0.4); // How round or square
-  shape.setColour(0, 80, 50); // Which hue, saturation and lightness the shape has
+  shapeRed.setPosition(0.1, 0.1); // Where the shape is positioned on the screen
+  shapeRed.setSize(100); // How big or small the shape is
+  shapeRed.setRoundedness(1); // How round or square
+  shapeRed.setColour(0, 80, 50); // Which hue, saturation and lightness the shape has
 
   shapeYellow.setPosition(0.5, 0.5);
   shapeYellow.setSize(100);
-  shapeYellow.setRoundedness(0.4);
+  shapeYellow.setRoundedness(1);
   shapeYellow.setColour(60, 80, 50);
 
   shapeGreen.setPosition(1, 1);
   shapeGreen.setSize(100);
-  shapeGreen.setRoundedness(0.4);
+  shapeGreen.setRoundedness(1);
   shapeGreen.setColour(120, 80, 50);
 
   shapeBlue.setPosition(1, 0.1);
   shapeBlue.setSize(100);
-  shapeBlue.setRoundedness(0.4);
+  shapeBlue.setRoundedness(1);
   shapeBlue.setColour(210, 80, 50);
 
   shapePurple.setPosition(0.1, 1);
   shapePurple.setSize(100);
-  shapePurple.setRoundedness(0.4);
+  shapePurple.setRoundedness(1);
   shapePurple.setColour(270, 80, 50);
 
   // Put your event listener code here
   window.addEventListener("pointerdown", pointerDown); // possible to play sound by clicking
 
   window.addEventListener("pointerdown", startSound); // doubble check if both are needed
-  shape.element.addEventListener("pointerenter", pointerEnter); // possible to play sound by entering shape
+  shapeRed.element.addEventListener("pointerenter", pointerEnter); // possible to play sound by entering shape
   shapeYellow.element.addEventListener("pointerenter", pointerEnter); // possible to play sound by entering shape
   shapeGreen.element.addEventListener("pointerenter", pointerEnter);
   shapeBlue.element.addEventListener("pointerenter", pointerEnter);
   shapePurple.element.addEventListener("pointerenter", pointerEnter);
 
-  shape.element.addEventListener("pointerleave", pointerLeave); // possible to play sound by leaving shape
+  shapeRed.element.addEventListener("pointerleave", pointerLeave); // possible to play sound by leaving shape
   shapeYellow.element.addEventListener("pointerleave", pointerLeave);
   shapeGreen.element.addEventListener("pointerleave", pointerLeave);
   shapeBlue.element.addEventListener("pointerleave", pointerLeave);
   shapePurple.element.addEventListener("pointerleave", pointerLeave);
-  // window.addEventListener("pointermove", pointerMove); // possible to play sound through cursor movement
+  window.addEventListener("pointermove", pointerMove); // possible to play sound through cursor movement
 }
 
 setup(); // Always remember to call setup()!
