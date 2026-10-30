@@ -52,8 +52,9 @@ const shapePositions = [0, 0, 0, 0, 0]; // EXPLAINF
 
 // ---------- Sound ----------
 // Make the instruments and plug them into the speakers.
-const synth = new Tone.PolySynth(Tone.Synth).toDestination(); // can play several notes at once
-
+// const synth = new Tone.PolySynth(Tone.Synth).toDestination(); // can play several notes at once
+const vibrato = new Tone.Vibrato(6, 0).toDestination(); // 6 wobbles per second, depth 0 = off
+const synth = new Tone.PolySynth(Tone.Synth).connect(vibrato);
 // ---------- Update ----------
 // Update the state. This is called every 100ms.
 function update() {
@@ -70,11 +71,16 @@ function use() {
 // Runs every time the pointer goes down: a click, a tap or a pen touch.
 function pointerDown(event) {
   Tone.start(); // browsers only allow sound after the player has pressed something
-  let normX = event.clientX / window.innerWidth; // Maybe keep maybe not
-  console.log("Pointer down at", normX); // Maybe keep maybe not
-  synth.triggerAttackRelease(note, "8n"); // play the note for an eighth note
+  // synth.triggerAttack("E1"); // play the note for an eighth note
+  vibrato.depth.rampTo(0.5, 0.2);
+  console.log("pointer down: vibrato on");
 }
 
+function pointerUp(event) {
+  Tone.start();
+  vibrato.depth.rampTo(0, 0.2);
+  console.log("pointer up: vibrato off");
+}
 function startSound(event) {
   Tone.start();
 }
@@ -114,34 +120,35 @@ function pointerEnter(event) {
     }
     shapes[i].setSize(sizes[shapePositions[i]]); // EXPLAIN
     console.log("shape", i, "size", sizes[shapePositions[i]]);
+    console.log("Pointer enters shape");
   }
 }
 
-// console.log("pointer enters red shape");
 function pointerLeave(event) {
   if (event.currentTarget === shapeRed.element) {
-    // synth.triggerAttackRelease("G4", "8n");
+    // synth.triggerAttackRelease("G4", "12n");
     shapeRed.setRoundedness(1);
     shapeRed.setColour(0, 80, 50);
   } else if (event.currentTarget === shapeYellow.element) {
-    // synth.triggerAttackRelease("A4", "8n");
+    // synth.triggerAttackRelease("A4", "12n");
     shapeYellow.setRoundedness(1);
     shapeYellow.setColour(60, 80, 50);
   } else if (event.currentTarget === shapeGreen.element) {
-    // synth.triggerAttackRelease("B4", "8n");
+    // synth.triggerAttackRelease("B4", "12n");
     shapeGreen.setRoundedness(1);
     shapeGreen.setColour(120, 80, 50);
   } else if (event.currentTarget === shapeBlue.element) {
-    // synth.triggerAttackRelease("E4", "8n");
+    // synth.triggerAttackRelease("E4", "12n");
     shapeBlue.setRoundedness(1);
     shapeBlue.setColour(210, 80, 50);
   } else if (event.currentTarget === shapePurple.element) {
-    // synth.triggerAttackRelease("F4", "8n");
+    // synth.triggerAttackRelease("F4", "12n");
     shapePurple.setRoundedness(1);
     shapePurple.setColour(270, 80, 50);
   }
+  console.log("pointer leaves shape");
 }
-// console.log("pointer leaves yellow shape");
+
 // function pointerMove(event) {
 // Tone.start();
 // let normX = event.clientX/window.innerWidth;
@@ -199,6 +206,14 @@ function setup() {
   shapeBlue.element.addEventListener("pointerleave", pointerLeave);
   shapePurple.element.addEventListener("pointerleave", pointerLeave);
   window.addEventListener("pointermove", pointerMove); // possible to play sound through cursor movement
+
+  window.addEventListener("pointerdown", pointerDown);
+
+  window.addEventListener("pointerup", pointerUp);
+  // shapeYellow.element.addEventListener("pointerup", pointerUp);
+  // shapeGreen.element.addEventListener("pointerup", pointerUp);
+  // shapeBlue.element.addEventListener("pointerup", pointerUp);
+  // shapePurple.element.addEventListener("pointerup", pointerUp);
 }
 
 setup(); // Always remember to call setup()!
