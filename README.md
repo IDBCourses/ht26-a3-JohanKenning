@@ -16,7 +16,6 @@ A instrument made of five coloured circles. Every circle has a different chord. 
 | Move the pointer off a shape       | plays a note                       | Nothing                                            |
 | Press and hold                     | Adds a vibrato effect that wobbles | Entering the shapes makes the chords wobble        |
 | Releasing pointer                  | THe vibrato effect fades out       | The chords wobble fades out                        |
-| Move over the shape before presing | Nothing                            | The shape light up and grows one size              |
 
 How to get started: Press anywhere the screen in order to turn on the sound. Then move over the shapes to play different chords. Try holding the the pinter down button while moving across the shapes to hear a vibrato effect added to the chords. Moving into the shapes repeatedly makes them bigger and after three entries it resets.
 

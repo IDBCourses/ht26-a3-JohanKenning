@@ -174,12 +174,12 @@ function setup() {
   shapePurple.setColour(270, 80, 50);
 
   // Put your event listener code here
-  window.addEventListener("pointerdown", pointerDown); // possible to play sound by clicking
-  window.addEventListener("pointerup", pointerUp);
+  window.addEventListener("pointerdown", pointerDown); // 
+  window.addEventListener("pointerup", pointerUp); //
   window.addEventListener("pointermove", pointerMove);
 
   shapeRed.element.addEventListener("pointerenter", pointerEnter); // possible to play sound by entering shape
-  shapeYellow.element.addEventListener("pointerenter", pointerEnter); // possible to play sound by entering shape
+  shapeYellow.element.addEventListener("pointerenter", pointerEnter);
   shapeGreen.element.addEventListener("pointerenter", pointerEnter);
   shapeBlue.element.addEventListener("pointerenter", pointerEnter);
   shapePurple.element.addEventListener("pointerenter", pointerEnter);
