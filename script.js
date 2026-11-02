@@ -26,7 +26,6 @@ import { createShape } from "./shape.js";
 // ---------- Settings ----------
 // Settings variables should contain all of the "fixed" parts of your programs
 // For example: which notes you can play, how fast things move, the tempo.
-const note = "C4"; // the note played when the pointer goes down
 
 const shapeRed = createShape(); // different shapes
 const shapeYellow = createShape(); // Double check why i have these?
@@ -36,23 +35,23 @@ const shapePurple = createShape();
 
 const shapes = [shapeRed, shapeYellow, shapeGreen, shapeBlue, shapePurple];
 
-const startShape = 100; // EXPLAIN
-const nextSize = 20;
+const startShape = 100;
+const nextSize = 10;
 const maxShape = 3;
 
-const sizes = []; //EXPLAIN
+const sizes = [];
 for (let i = 0; i <= maxShape; i++) {
   sizes.push(startShape + i * nextSize);
 }
 
-const shapePositions = [0, 0, 0, 0, 0]; // EXPLAINF
+const shapePositions = [0, 0, 0, 0, 0];
 // ---------- State ----------
 // State variables are the parts of your program that change over time.
 // For example: where the pointer is, how fast it's moving, or whether a drone is on.
 
 // ---------- Sound ----------
 // Make the instruments and plug them into the speakers.
-// const synth = new Tone.PolySynth(Tone.Synth).toDestination(); // can play several notes at once
+// const synth = new Tone.PolySynth(Tone.Synth).toDestination(); // can play several notes at once NEEDED?
 const vibrato = new Tone.Vibrato(6, 0).toDestination(); // 6 wobbles per second, depth 0 = off
 const synth = new Tone.PolySynth(Tone.Synth).connect(vibrato);
 // ---------- Update ----------
@@ -71,7 +70,6 @@ function use() {
 // Runs every time the pointer goes down: a click, a tap or a pen touch.
 function pointerDown(event) {
   Tone.start(); // browsers only allow sound after the player has pressed something
-  // synth.triggerAttack("E1"); // play the note for an eighth note
   vibrato.depth.rampTo(0.5, 0.2);
   console.log("pointer down: vibrato on");
 }
@@ -81,13 +79,9 @@ function pointerUp(event) {
   vibrato.depth.rampTo(0, 0.2);
   console.log("pointer up: vibrato off");
 }
-function startSound(event) {
-  Tone.start();
-}
 
 function pointerMove(event) {
   let normX = event.clientX / window.innerWidth;
-  // console.log(normX);
 }
 
 function pointerEnter(event) {
@@ -113,12 +107,11 @@ function pointerEnter(event) {
     shapePurple.setColour(270, 100, 70);
   }
   for (let i = 0; i < shapes.length; i++) {
-    // EXPLAIN
     if (event.currentTarget === shapes[i].element) {
       shapePositions[i] = shapePositions[i] + 1;
       if (shapePositions[i] >= sizes.length) shapePositions[i] = 0;
     }
-    shapes[i].setSize(sizes[shapePositions[i]]); // EXPLAIN
+    shapes[i].setSize(sizes[shapePositions[i]]);
     console.log("shape", i, "size", sizes[shapePositions[i]]);
     console.log("Pointer enters shape");
   }
@@ -126,36 +119,28 @@ function pointerEnter(event) {
 
 function pointerLeave(event) {
   if (event.currentTarget === shapeRed.element) {
-    // synth.triggerAttackRelease("G4", "12n");
+    synth.triggerAttackRelease("G3", "16n");
     shapeRed.setRoundedness(1);
     shapeRed.setColour(0, 80, 50);
   } else if (event.currentTarget === shapeYellow.element) {
-    // synth.triggerAttackRelease("A4", "12n");
+    synth.triggerAttackRelease("A3", "16n");
     shapeYellow.setRoundedness(1);
     shapeYellow.setColour(60, 80, 50);
   } else if (event.currentTarget === shapeGreen.element) {
-    // synth.triggerAttackRelease("B4", "12n");
+    synth.triggerAttackRelease("B3", "16n");
     shapeGreen.setRoundedness(1);
     shapeGreen.setColour(120, 80, 50);
   } else if (event.currentTarget === shapeBlue.element) {
-    // synth.triggerAttackRelease("E4", "12n");
+    synth.triggerAttackRelease("E3", "16n");
     shapeBlue.setRoundedness(1);
     shapeBlue.setColour(210, 80, 50);
   } else if (event.currentTarget === shapePurple.element) {
-    // synth.triggerAttackRelease("F4", "12n");
+    synth.triggerAttackRelease("F3", "16n");
     shapePurple.setRoundedness(1);
     shapePurple.setColour(270, 80, 50);
   }
   console.log("pointer leaves shape");
 }
-
-// function pointerMove(event) {
-// Tone.start();
-// let normX = event.clientX/window.innerWidth;
-
-// console.log("Pointer placement ", event.clientX, event.clientY);
-//synth.triggerAttackRelease(note, "8n");
-// }
 
 // ---------- Setup ----------
 // Setup is run once, at the start of the program. It sets everything up for us!
@@ -163,39 +148,38 @@ function setup() {
   update(); // start the update loop
   use(); // start the use loop
 
-  // Example: a shape near the middle of the window. Replace it with your own.
-
   shapeRed.setPosition(0.1, 0.1); // Where the shape is positioned on the screen
   shapeRed.setSize(100); // How big or small the shape is
   shapeRed.setRoundedness(1); // How round or square
   shapeRed.setColour(0, 80, 50); // Which hue, saturation and lightness the shape has
 
-  shapeYellow.setPosition(0.5, 0.5);
+  shapeYellow.setPosition(0.4, 0.4);
   shapeYellow.setSize(100);
   shapeYellow.setRoundedness(1);
   shapeYellow.setColour(60, 80, 50);
 
-  shapeGreen.setPosition(1, 1);
+  shapeGreen.setPosition(0.8, 0.8);
   shapeGreen.setSize(100);
   shapeGreen.setRoundedness(1);
   shapeGreen.setColour(120, 80, 50);
 
-  shapeBlue.setPosition(1, 0.1);
+  shapeBlue.setPosition(0.8, 0.1);
   shapeBlue.setSize(100);
   shapeBlue.setRoundedness(1);
   shapeBlue.setColour(210, 80, 50);
 
-  shapePurple.setPosition(0.1, 1);
+  shapePurple.setPosition(0.1, 0.8);
   shapePurple.setSize(100);
   shapePurple.setRoundedness(1);
   shapePurple.setColour(270, 80, 50);
 
   // Put your event listener code here
-  window.addEventListener("pointerdown", pointerDown); // possible to play sound by clicking
+  window.addEventListener("pointerdown", pointerDown); //
+  window.addEventListener("pointerup", pointerUp); //
+  window.addEventListener("pointermove", pointerMove);
 
-  window.addEventListener("pointerdown", startSound); // doubble check if both are needed
   shapeRed.element.addEventListener("pointerenter", pointerEnter); // possible to play sound by entering shape
-  shapeYellow.element.addEventListener("pointerenter", pointerEnter); // possible to play sound by entering shape
+  shapeYellow.element.addEventListener("pointerenter", pointerEnter);
   shapeGreen.element.addEventListener("pointerenter", pointerEnter);
   shapeBlue.element.addEventListener("pointerenter", pointerEnter);
   shapePurple.element.addEventListener("pointerenter", pointerEnter);
@@ -205,15 +189,6 @@ function setup() {
   shapeGreen.element.addEventListener("pointerleave", pointerLeave);
   shapeBlue.element.addEventListener("pointerleave", pointerLeave);
   shapePurple.element.addEventListener("pointerleave", pointerLeave);
-  window.addEventListener("pointermove", pointerMove); // possible to play sound through cursor movement
-
-  window.addEventListener("pointerdown", pointerDown);
-
-  window.addEventListener("pointerup", pointerUp);
-  // shapeYellow.element.addEventListener("pointerup", pointerUp);
-  // shapeGreen.element.addEventListener("pointerup", pointerUp);
-  // shapeBlue.element.addEventListener("pointerup", pointerUp);
-  // shapePurple.element.addEventListener("pointerup", pointerUp);
 }
 
 setup(); // Always remember to call setup()!
