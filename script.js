@@ -3,7 +3,7 @@ import { createShape } from "./shape.js";
 // ---------- Settings ----------
 
 const shapeRed = createShape(); // defines createShape imported from shape.js, makes it possible to create shapes.
-const shapeYellow = createShape(); // different shapes
+const shapeYellow = createShape(); // different shapes.
 const shapeGreen = createShape();
 const shapeBlue = createShape();
 const shapePurple = createShape();
@@ -24,7 +24,7 @@ for (let i = 0; i <= maxShape; i++) {
 const shapePositions = [0, 0, 0, 0, 0]; // index of sizes, in the same order as shapes.
 
 // ---------- Sound ----------
-const vibrato = new Tone.Vibrato(6, 0).toDestination(); // 6 wobbles per second, depth 0 = off
+const vibrato = new Tone.Vibrato(6, 0).toDestination(); // 6 wobbles per second, depth 0 = off.
 const synth = new Tone.PolySynth(Tone.Synth).connect(vibrato); // Plays several notes at once, with vibrato effect.
 // ---------- Update ----------
 function update() {
