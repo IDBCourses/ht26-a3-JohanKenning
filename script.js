@@ -174,7 +174,7 @@ function setup() {
   shapePurple.setColour(270, 80, 50);
 
   // Put your event listener code here
-  window.addEventListener("pointerdown", pointerDown); //
+  window.addEventListener("pointerdown", pointerDown); // 
   window.addEventListener("pointerup", pointerUp); //
   window.addEventListener("pointermove", pointerMove);
 
