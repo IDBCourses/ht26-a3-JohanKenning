@@ -1,94 +1,66 @@
-/*
- * IDB Programming: A3 — a musical instrument
- *
- * All of the code for your instrument goes in this file. It's split into sections:
- *   settings — the "fixed" parts of your program
- *   state    — the parts of your program that change over time
- *   sound    — the Tone.js instruments and effects
- *   update   — updates the state every 100ms, if necessary
- *   use      — uses the state to make sound and shapes every 100ms, if necessary
- *   controls — what happens when the player uses the pointer
- *   setup    — starts everything
- *
- * The pointer events change the state. update() and use() each run every
- * 100ms, in a loop:
- *   1. update: change the state, e.g. based on time or on the pointer's movement
- *   2. use:    make sound and move shapes, based on the state
- *
- * Shapes come from shape.js: createShape() makes one, and its methods
- * (setPosition, setSize, setColour ...) change it.
- *
- * Tone.js documentation: https://tonejs.github.io/docs/15.1.22/
- */
-
 import { createShape } from "./shape.js";
 
 // ---------- Settings ----------
-// Settings variables should contain all of the "fixed" parts of your programs
-// For example: which notes you can play, how fast things move, the tempo.
 
-const shapeRed = createShape(); // different shapes
-const shapeYellow = createShape(); // Double check why i have these?
+const shapeRed = createShape(); // defines createShape imported from shape.js, makes it possible to create shapes.
+const shapeYellow = createShape(); // different shapes
 const shapeGreen = createShape();
 const shapeBlue = createShape();
 const shapePurple = createShape();
 
+// All shapes collected in one array, the loops go through them.
 const shapes = [shapeRed, shapeYellow, shapeGreen, shapeBlue, shapePurple];
 
-const startShape = 100;
-const nextSize = 10;
-const maxShape = 3;
+const startShape = 100; // Starting size of the shapes, in pixels.
+const nextSize = 10; // How many pixels a shape grows when entered.
+const maxShape = 3; // How many times a shape can grow before reseting.
 
+// List of the sizes a shape can have 100, 110, 120, 130.
 const sizes = [];
 for (let i = 0; i <= maxShape; i++) {
-  sizes.push(startShape + i * nextSize);
+  sizes.push(startShape + i * nextSize); // Pushes one size to the end of the list
 }
-
-const shapePositions = [0, 0, 0, 0, 0];
 // ---------- State ----------
-// State variables are the parts of your program that change over time.
-// For example: where the pointer is, how fast it's moving, or whether a drone is on.
+const shapePositions = [0, 0, 0, 0, 0]; // index of sizes, in the same order as shapes.
 
 // ---------- Sound ----------
-// Make the instruments and plug them into the speakers.
-// const synth = new Tone.PolySynth(Tone.Synth).toDestination(); // can play several notes at once NEEDED?
 const vibrato = new Tone.Vibrato(6, 0).toDestination(); // 6 wobbles per second, depth 0 = off
-const synth = new Tone.PolySynth(Tone.Synth).connect(vibrato);
+const synth = new Tone.PolySynth(Tone.Synth).connect(vibrato); // Plays several notes at once, with vibrato effect.
 // ---------- Update ----------
-// Update the state. This is called every 100ms.
 function update() {
-  setTimeout(update, 100); // call update() again in 100 milliseconds
+  // Checks what has changed
+  setTimeout(update, 100); // updates evere 100 milliseconds
 }
 
 // ---------- Use ----------
-// Use the state to make sound and move shapes. This is called every 100ms.
 function use() {
-  setTimeout(use, 100); // call use() again in 100 milliseconds
+  // Acts on update
+  setTimeout(use, 100); // call use() every 100 milliseconds
 }
 
 // ---------- Controls (Event Handlers) ----------
-// Runs every time the pointer goes down: a click, a tap or a pen touch.
+
 function pointerDown(event) {
+  // runs when pointer is pressed down.
   Tone.start(); // browsers only allow sound after the player has pressed something
-  vibrato.depth.rampTo(0.5, 0.2);
+  vibrato.depth.rampTo(0.5, 0.2); // fades in the vibrato effect in
   console.log("pointer down: vibrato on");
 }
 
 function pointerUp(event) {
-  Tone.start();
-  vibrato.depth.rampTo(0, 0.2);
+  // runs when pointer is released
+  Tone.start(); // makes sure the sound can start.
+  vibrato.depth.rampTo(0, 0.2); // fades the vibrato effect out
   console.log("pointer up: vibrato off");
 }
 
-function pointerMove(event) {
-  let normX = event.clientX / window.innerWidth;
-}
-
 function pointerEnter(event) {
+  // Runs when the pointer moves into a shape.
   if (event.currentTarget === shapeRed.element) {
+    // Figures out which shape was entered, plays it chord and lights up.
     synth.triggerAttackRelease(["E4", "G4", "B4"], "8n");
-    shapeRed.setRoundedness(1);
-    shapeRed.setColour(0, 100, 70);
+    shapeRed.setRoundedness(1); // makes it a full circle
+    shapeRed.setColour(0, 100, 70); // hue, saturation, lightness.
   } else if (event.currentTarget === shapeYellow.element) {
     synth.triggerAttackRelease(["G4", "B4", "D5"], "8n");
     shapeYellow.setRoundedness(1);
@@ -107,35 +79,32 @@ function pointerEnter(event) {
     shapePurple.setColour(270, 100, 70);
   }
   for (let i = 0; i < shapes.length; i++) {
+    // make the entered hape one size bigger.
     if (event.currentTarget === shapes[i].element) {
-      shapePositions[i] = shapePositions[i] + 1;
-      if (shapePositions[i] >= sizes.length) shapePositions[i] = 0;
+      shapePositions[i] = shapePositions[i] + 1; // go to the next size
+      if (shapePositions[i] >= sizes.length) shapePositions[i] = 0; // starts over after biggest size.
+      console.log("shape", i, "size", sizes[shapePositions[i]]);
+      console.log("Pointer enters shape");
     }
-    shapes[i].setSize(sizes[shapePositions[i]]);
-    console.log("shape", i, "size", sizes[shapePositions[i]]);
-    console.log("Pointer enters shape");
+    shapes[i].setSize(sizes[shapePositions[i]]); // applies the size to the shape.
   }
 }
 
 function pointerLeave(event) {
+  // runs when the pointer moves out of a shape and returns to standard settings.
   if (event.currentTarget === shapeRed.element) {
-    synth.triggerAttackRelease("G3", "16n");
     shapeRed.setRoundedness(1);
     shapeRed.setColour(0, 80, 50);
   } else if (event.currentTarget === shapeYellow.element) {
-    synth.triggerAttackRelease("A3", "16n");
     shapeYellow.setRoundedness(1);
     shapeYellow.setColour(60, 80, 50);
   } else if (event.currentTarget === shapeGreen.element) {
-    synth.triggerAttackRelease("B3", "16n");
     shapeGreen.setRoundedness(1);
     shapeGreen.setColour(120, 80, 50);
   } else if (event.currentTarget === shapeBlue.element) {
-    synth.triggerAttackRelease("E3", "16n");
     shapeBlue.setRoundedness(1);
     shapeBlue.setColour(210, 80, 50);
   } else if (event.currentTarget === shapePurple.element) {
-    synth.triggerAttackRelease("F3", "16n");
     shapePurple.setRoundedness(1);
     shapePurple.setColour(270, 80, 50);
   }
@@ -143,7 +112,6 @@ function pointerLeave(event) {
 }
 
 // ---------- Setup ----------
-// Setup is run once, at the start of the program. It sets everything up for us!
 function setup() {
   update(); // start the update loop
   use(); // start the use loop
@@ -158,12 +126,12 @@ function setup() {
   shapeYellow.setRoundedness(1);
   shapeYellow.setColour(60, 80, 50);
 
-  shapeGreen.setPosition(0.8, 0.8);
+  shapeGreen.setPosition(0.7, 0.8);
   shapeGreen.setSize(100);
   shapeGreen.setRoundedness(1);
   shapeGreen.setColour(120, 80, 50);
 
-  shapeBlue.setPosition(0.8, 0.1);
+  shapeBlue.setPosition(0.7, 0.1);
   shapeBlue.setSize(100);
   shapeBlue.setRoundedness(1);
   shapeBlue.setColour(210, 80, 50);
@@ -173,18 +141,16 @@ function setup() {
   shapePurple.setRoundedness(1);
   shapePurple.setColour(270, 80, 50);
 
-  // Put your event listener code here
-  window.addEventListener("pointerdown", pointerDown); // 
-  window.addEventListener("pointerup", pointerUp); //
-  window.addEventListener("pointermove", pointerMove);
+  window.addEventListener("pointerdown", pointerDown); // vibrato on
+  window.addEventListener("pointerup", pointerUp); // vibrato off
 
-  shapeRed.element.addEventListener("pointerenter", pointerEnter); // possible to play sound by entering shape
+  shapeRed.element.addEventListener("pointerenter", pointerEnter); // possible to play sound and by entering shape
   shapeYellow.element.addEventListener("pointerenter", pointerEnter);
   shapeGreen.element.addEventListener("pointerenter", pointerEnter);
   shapeBlue.element.addEventListener("pointerenter", pointerEnter);
   shapePurple.element.addEventListener("pointerenter", pointerEnter);
 
-  shapeRed.element.addEventListener("pointerleave", pointerLeave); // possible to play sound by leaving shape
+  shapeRed.element.addEventListener("pointerleave", pointerLeave); // Resets
   shapeYellow.element.addEventListener("pointerleave", pointerLeave);
   shapeGreen.element.addEventListener("pointerleave", pointerLeave);
   shapeBlue.element.addEventListener("pointerleave", pointerLeave);
