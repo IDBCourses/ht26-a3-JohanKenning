@@ -4,20 +4,18 @@
 
 **Name:** Johan Kenning as0477
 
-A instrument made of five coloured circles. Every circle has a different chord. You play it by moving the pointer into a shape and moving it out of it. Every time you enter it with the pointer it grows in size. Holding the pointer down adds a vibrato effect to the chords and notes while playing.
+A instrument made of five coloured circles. Every circle has a different chord. You play it by moving the pointer into the different shapes. Every time you enter it with the pointer it grows in size. Holding the pointer down adds a vibrato effect to the chords while playing.
 
 ## How to play
 
-<!-- Fill in the table with a row for everything the player can do with the pointer: clicking, moving slowly or fast, moving in circles, holding still... Say what happens to the sound and to the shapes. If you added keys, give them rows too. -->
+| When you...                   | The sound...                       | The shapes...                                      |
+| ----------------------------- | ---------------------------------- | -------------------------------------------------- |
+| Move the pointer into a shape | Plays a chord                      | Grows and lights up every time you enter (3 times) |
+| Move the pointer off a shape  | Nothing                            | Returns to standard colour                         |
+| Press and hold                | Adds a vibrato effect that wobbles | Entering the shapes makes the chords wobble        |
+| Releasing pointer             | THe vibrato effect fades out       | The chords wobble fades out                        |
 
-| When you...                        | The sound...                       | The shapes...                                      |
-| ---------------------------------- | ---------------------------------- | -------------------------------------------------- |
-| Move the pointer into a shape      | plays a chord                      | Grows and lights up every time you enter (3 times) |
-| Move the pointer off a shape       | plays a note                       | Nothing                                            |
-| Press and hold                     | Adds a vibrato effect that wobbles | Entering the shapes makes the chords wobble        |
-| Releasing pointer                  | THe vibrato effect fades out       | The chords wobble fades out                        |
-
-How to get started: Press anywhere the screen in order to turn on the sound. Then move over the shapes to play different chords. Try holding the the pinter down button while moving across the shapes to hear a vibrato effect added to the chords. Moving into the shapes repeatedly makes them bigger and after three entries it resets.
+How to get started: Press anywhere the screen in order to turn on the sound. Then move over the shapes to play different chords. Try holding the the pointer button down while moving across the shapes to hear a vibrato effect added to the chords and releasing. Moving into the shapes repeatedly makes them bigger and after three entries it resets.
 
 ---
 
